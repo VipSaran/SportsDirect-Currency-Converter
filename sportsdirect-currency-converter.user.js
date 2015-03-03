@@ -3,7 +3,7 @@
 // @description   Greasemonkey/Tampermonkey UserScript for displaying prices in currency not supported originally
 // @namespace     http://github.com/VipSaran/SportsDirect-Currency-Converter
 // @updateURL     https://github.com/VipSaran/SportsDirect-Currency-Converter/raw/master/google_play_music_album_sorter.user.js
-// @version       1.0
+// @version       1.0.1
 // @author        VipSaran
 // @require       http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js
 // @grant         GM_xmlhttpRequest
@@ -14,7 +14,7 @@
 // @run-at        document-end
 // ==/UserScript==
 
-var DEBUG = true;
+var DEBUG = false;
 
 function SportsDirectCurrencyConverter() {
   if (DEBUG) console.log('SportsDirectCurrencyConverter()');
