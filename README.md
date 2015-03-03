@@ -2,12 +2,11 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Google-Play-Music-Album-Sorter](#google-play-music-album-sorter)
+- [SportsDirect.com Currency Converter](#sportsdirectcom-currency-converter)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
+  - [Usage](#usage)
   - [Limitations](#limitations)
-  - [To-Do](#to-do)
-  - [Changelog](#changelog)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
