@@ -14,7 +14,7 @@
 // @run-at        document-end
 // ==/UserScript==
 
-var DEBUG = false;
+var DEBUG = true;
 
 function SportsDirectCurrencyConverter() {
   if (DEBUG) console.log('SportsDirectCurrencyConverter()');
@@ -245,5 +245,13 @@ $(document).ready(function() {
     setTimeout(function() {
       doConversions();
     }, 800);
+  });
+
+  $('a.FilterAnchor').on('click', function() {
+    if (DEBUG) console.log('"Sort By" changed');
+
+    setTimeout(function() {
+      doConversions();
+    }, 1000);
   });
 });
