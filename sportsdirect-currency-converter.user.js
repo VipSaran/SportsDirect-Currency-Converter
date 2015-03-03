@@ -151,6 +151,22 @@ SportsDirectCurrencyConverter.prototype.init = function() {
           return;
         }
       });
+
+      // update ticket price on LIST PAGE
+      $('span.s-smalltext').each(function(index) {
+        var originalText = $(this).text().trim();
+        console.log('original price:', originalText);
+
+        try {
+          var newPriceStr = convertPrice(originalText, conversionRate);
+
+          // replace the item price on page
+          $(this).text(newPriceStr + ' HRK');
+        } catch (e) {
+          console.error(e);
+          return;
+        }
+      });
     }
   });
 };
