@@ -3,7 +3,7 @@
 // @description   Greasemonkey/Tampermonkey UserScript for displaying prices in currency not supported originally
 // @namespace     http://github.com/VipSaran/SportsDirect-Currency-Converter
 // @updateURL     https://github.com/VipSaran/SportsDirect-Currency-Converter/raw/master/google_play_music_album_sorter.user.js
-// @version       1.0.1
+// @version       1.0
 // @author        VipSaran
 // @require       http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js
 // @grant         GM_xmlhttpRequest
@@ -14,7 +14,7 @@
 // @run-at        document-end
 // ==/UserScript==
 
-var DEBUG = true;
+var DEBUG = false;
 
 function SportsDirectCurrencyConverter() {
   if (DEBUG) console.log('SportsDirectCurrencyConverter()');
@@ -133,7 +133,10 @@ SportsDirectCurrencyConverter.prototype.init = function() {
     } else {
       console.log('RESULT', conversionRate);
 
-      // update actual price on LIST PAGE
+      /*
+       * LIST PAGE
+       */
+      // update the selling price
       $('span.curprice.productHasRef').each(function(index) {
         var originalText = $(this).text().trim();
         console.log('original price:', originalText);
@@ -152,7 +155,7 @@ SportsDirectCurrencyConverter.prototype.init = function() {
         }
       });
 
-      // update ticket price on LIST PAGE
+      // update the ticket price
       $('span.s-smalltext').each(function(index) {
         var originalText = $(this).text().trim();
         console.log('original price:', originalText);
@@ -165,6 +168,57 @@ SportsDirectCurrencyConverter.prototype.init = function() {
         } catch (e) {
           console.error(e);
           return;
+        }
+      });
+
+      /*
+       * ITEM PAGE
+       */
+      // update the selling price
+      $('#lblSellingPrice').text(function(index) {
+        var originalText = $(this).text().trim();
+        console.log('original price:', originalText);
+
+        try {
+          var newPriceStr = convertPrice(originalText, conversionRate);
+
+          // replace the item price on page
+          return newPriceStr + ' HRK';
+        } catch (e) {
+          console.error(e);
+          return $(this).text();
+        }
+      });
+
+      // update the ticket price
+      $('#lblTicketPrice').text(function(index) {
+        var originalText = $(this).text().trim();
+        console.log('original price:', originalText);
+
+        try {
+          var newPriceStr = convertPrice(originalText, conversionRate);
+
+          // replace the item price on page
+          return newPriceStr + ' HRK';
+        } catch (e) {
+          console.error(e);
+          return $(this).text();
+        }
+      });
+
+      // update the 'you save' price
+      $('#lblWeLeftTab').text(function(index) {
+        var originalText = $(this).text().trim();
+        console.log('original price:', originalText);
+
+        try {
+          var newPriceStr = convertPrice(originalText, conversionRate);
+
+          // replace the item price on page
+          return newPriceStr + ' HRK';
+        } catch (e) {
+          console.error(e);
+          return $(this).text();
         }
       });
     }
