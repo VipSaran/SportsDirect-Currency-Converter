@@ -73,17 +73,84 @@ SportsDirectCurrencyConverter.prototype.saveConversionRate = function(conversion
   window.localStorage.setItem('date_' + conversionName, new Date().getTime());
 };
 
+var getNumberStartingIndex = function(str) {
+  var index = 0;
+  if (!isNaN(str.substring(index, index + 1))) {
+    return -1;
+  }
+
+  while (isNaN(str.substring(index, index + 1))) {
+    index++;
+  }
+
+  return index;
+};
+
+var getNumberEndingIndex = function(str) {
+  var index = str.length - 1;
+  if (!isNaN(str.substring(index))) {
+    return -1;
+  }
+
+  while (isNaN(str.substring(index, index + 1))) {
+    index--;
+  }
+
+  return index;
+};
+
+var convertPrice = function(originalText, conversionRate) {
+  var originalPriceStr = '';
+  if ((startIdx = getNumberStartingIndex(originalText)) != -1) {
+    originalPriceStr = originalText.substring(startIdx).trim();
+  } else if ((endIdx = getNumberEndingIndex(originalText)) != -1) {
+    originalPriceStr = originalText.substring(0, endIdx).trim();
+  } else {
+    throw new Error('Couldn\'t find the currency symbol');
+  }
+
+  if (isNaN(originalPriceStr)) {
+    originalPriceStr = originalPriceStr.replace(',', '.').replace(' ', '').replace(' ', '');
+  }
+
+  var newPriceStr = (originalPriceStr * conversionRate).toFixed(2);
+  // console.log('originalPriceStr=', originalPriceStr);
+  // console.log('newPriceStr     =', newPriceStr);
+
+  return newPriceStr;
+};
+
 SportsDirectCurrencyConverter.prototype.init = function() {
   if (DEBUG) console.log('SportsDirectCurrencyConverter.init()');
 
-  var selectedCurrency = $('#currencyLanguageSelector > span > p').html().substring(2);
+  var selectedCurrency = $('#currencyLanguageSelector > span > p').text();
+  selectedCurrency = selectedCurrency.substring(selectedCurrency.indexOf(' ')).trim();
   console.log('selectedCurrency="' + selectedCurrency + '"');
 
-  converter.getConversionRate(selectedCurrency, 'HRK', function(error, result) {
+  converter.getConversionRate(selectedCurrency, 'HRK', function(error, conversionRate) {
     if (error) {
       console.error('ERROR', error);
     } else {
-      console.log('RESULT', result);
+      console.log('RESULT', conversionRate);
+
+      // update actual price on LIST PAGE
+      $('span.curprice.productHasRef').each(function(index) {
+        var originalText = $(this).text().trim();
+        console.log('original price:', originalText);
+
+        try {
+          var newPriceStr = convertPrice(originalText, conversionRate);
+
+          // replace the item price on page
+          $(this).text(newPriceStr + ' HRK');
+
+          // some original currencies (CNY, HUF) have more digits, so are displayed with small letters --> revert style to large
+          $(this).removeClass('CurrencySizeSmall').addClass('CurrencySizeLarge');
+        } catch (e) {
+          console.error(e);
+          return;
+        }
+      });
     }
   });
 };
