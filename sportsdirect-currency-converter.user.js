@@ -3,7 +3,7 @@
 // @description   Greasemonkey/Tampermonkey UserScript for displaying prices in currency not supported originally
 // @namespace     http://github.com/VipSaran/SportsDirect-Currency-Converter
 // @updateURL     https://github.com/VipSaran/SportsDirect-Currency-Converter/raw/master/google_play_music_album_sorter.user.js
-// @version       1.0.3
+// @version       1.0.4
 // @author        VipSaran
 // @require       http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js
 // @grant         GM_xmlhttpRequest
@@ -335,7 +335,7 @@ var converter = new SportsDirectCurrencyConverter();
 $(document).ready(function() {
   converter.init();
 
-
+  // react to changes on 'Sort By'
   $('#dnn_ctr51055_BrowseV3View_ddlSortOptions1').change(function() {
     if (DEBUG) console.log('"Sort By" changed');
 
@@ -344,6 +344,7 @@ $(document).ready(function() {
     }, 800);
   });
 
+  // react to filter selections
   $('a.FilterAnchor').on('click', function() {
     if (DEBUG) console.log('"Sort By" changed');
 
@@ -352,6 +353,16 @@ $(document).ready(function() {
     }, 1000);
   });
 
+  // react to ITEM PAGE color selection changes
+  $('li.colorImgli').on('click', function() {
+    if (DEBUG) console.log('"Sort By" changed');
+
+    setTimeout(function() {
+      doConversions();
+    }, 500);
+  });
+
+  // handle asynchronously loaded 'Most Popular' items
   $('.ModPSPlacementC').bind("DOMNodeInserted", function() {
     if (DEBUG) console.log('ModPSPlacementC DOMNodeInserted');
 
