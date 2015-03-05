@@ -16,6 +16,8 @@
 
 var DEBUG = true;
 
+var targetCurrency = 'HRK';
+
 function SportsDirectCurrencyConverter() {
   if (DEBUG) console.log('SportsDirectCurrencyConverter()');
 }
@@ -123,7 +125,7 @@ var convertPrice = function(originalText, conversionRate) {
 var doConversions = function() {
   if (DEBUG) console.log('SportsDirectCurrencyConverter.doConversions()');
 
-  converter.getConversionRate(selectedCurrency, 'HRK', function(error, conversionRate) {
+  converter.getConversionRate(selectedCurrency, targetCurrency, function(error, conversionRate) {
     if (error) {
       if (DEBUG) console.error('ERROR', error);
     } else {
@@ -141,7 +143,7 @@ var doConversions = function() {
           var newPriceStr = convertPrice(originalText, conversionRate);
 
           // replace the item price on page
-          $(this).text(newPriceStr + ' HRK');
+          $(this).text(newPriceStr + ' ' + targetCurrency);
 
           // some original currencies (CNY, HUF) have more digits, so are displayed with small letters --> revert style to large
           $(this).removeClass('CurrencySizeSmall').addClass('CurrencySizeLarge');
@@ -160,7 +162,7 @@ var doConversions = function() {
           var newPriceStr = convertPrice(originalText, conversionRate);
 
           // replace the item price on page
-          $(this).text(newPriceStr + ' HRK');
+          $(this).text(newPriceStr + ' ' + targetCurrency);
         } catch (e) {
           if (DEBUG) console.error(e);
           return;
@@ -179,7 +181,7 @@ var doConversions = function() {
           var newPriceStr = convertPrice(originalText, conversionRate);
 
           // replace the item price on page
-          return newPriceStr + ' HRK';
+          return newPriceStr + ' ' + targetCurrency;
         } catch (e) {
           if (DEBUG) console.error(e);
           return $(this).text();
@@ -195,7 +197,7 @@ var doConversions = function() {
           var newPriceStr = convertPrice(originalText, conversionRate);
 
           // replace the item price on page
-          return newPriceStr + ' HRK';
+          return newPriceStr + ' ' + targetCurrency;
         } catch (e) {
           if (DEBUG) console.error(e);
           return $(this).text();
@@ -211,7 +213,7 @@ var doConversions = function() {
           var newPriceStr = convertPrice(originalText, conversionRate);
 
           // replace the item price on page
-          return newPriceStr + ' HRK';
+          return newPriceStr + ' ' + targetCurrency;
         } catch (e) {
           if (DEBUG) console.error(e);
           return $(this).text();
@@ -230,7 +232,7 @@ var doConversions = function() {
           var newPriceStr = convertPrice(originalText, conversionRate);
 
           // replace the item price on page
-          return newPriceStr + ' HRK';
+          return newPriceStr + ' ' + targetCurrency;
         } catch (e) {
           if (DEBUG) console.error(e);
           return $(this).text();
@@ -246,7 +248,7 @@ var doConversions = function() {
           var newPriceStr = convertPrice(originalText, conversionRate);
 
           // replace the item price on page
-          return newPriceStr + ' HRK';
+          return newPriceStr + ' ' + targetCurrency;
         } catch (e) {
           if (DEBUG) console.error(e);
           return $(this).text();
@@ -268,7 +270,7 @@ var doMostPopularConversions = function() {
 
   updateMostPopularInProgress = true;
 
-  converter.getConversionRate(selectedCurrency, 'HRK', function(error, conversionRate) {
+  converter.getConversionRate(selectedCurrency, targetCurrency, function(error, conversionRate) {
     if (error) {
       if (DEBUG) console.error('ERROR', error);
     } else {
@@ -286,7 +288,7 @@ var doMostPopularConversions = function() {
           var newPriceStr = convertPrice(originalText, conversionRate);
 
           // replace the item price on page
-          return newPriceStr + ' HRK';
+          return newPriceStr + ' ' + targetCurrency;
         } catch (e) {
           if (DEBUG) console.error(e);
           return $(this).text();
@@ -302,7 +304,7 @@ var doMostPopularConversions = function() {
           var newPriceStr = convertPrice(originalText, conversionRate);
 
           // replace the item price on page
-          return newPriceStr + ' HRK';
+          return newPriceStr + ' ' + targetCurrency;
         } catch (e) {
           if (DEBUG) console.error(e);
           return $(this).text();
