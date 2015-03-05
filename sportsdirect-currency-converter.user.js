@@ -14,7 +14,7 @@
 // @run-at        document-end
 // ==/UserScript==
 
-var DEBUG = false;
+var DEBUG = true;
 
 function SportsDirectCurrencyConverter() {
   if (DEBUG) console.log('SportsDirectCurrencyConverter()');
@@ -121,6 +121,8 @@ var convertPrice = function(originalText, conversionRate) {
 };
 
 var doConversions = function() {
+  if (DEBUG) console.log('SportsDirectCurrencyConverter.doConversions()');
+
   converter.getConversionRate(selectedCurrency, 'HRK', function(error, conversionRate) {
     if (error) {
       if (DEBUG) console.error('ERROR', error);
@@ -215,7 +217,100 @@ var doConversions = function() {
           return $(this).text();
         }
       });
+
+      /*
+       * RECENTLY VIEWED
+       */
+      // update the selling price
+      $('span.AltStratSellPrice').text(function(index) {
+        var originalText = $(this).text().trim();
+        if (DEBUG) console.log('original price:', originalText);
+
+        try {
+          var newPriceStr = convertPrice(originalText, conversionRate);
+
+          // replace the item price on page
+          return newPriceStr + ' HRK';
+        } catch (e) {
+          if (DEBUG) console.error(e);
+          return $(this).text();
+        }
+      });
+
+      // update the ticket price
+      $('span.AltStratRefPrice').text(function(index) {
+        var originalText = $(this).text().trim();
+        if (DEBUG) console.log('original price:', originalText);
+
+        try {
+          var newPriceStr = convertPrice(originalText, conversionRate);
+
+          // replace the item price on page
+          return newPriceStr + ' HRK';
+        } catch (e) {
+          if (DEBUG) console.error(e);
+          return $(this).text();
+        }
+      });
     }
+  });
+};
+
+var updateMostPopularInProgress = false;
+var domMostPopularModifiedTimeout;
+
+var doMostPopularConversions = function() {
+  if (DEBUG) console.log('SportsDirectCurrencyConverter.doMostPopularConversions()');
+
+  if (domMostPopularModifiedTimeout) {
+    clearTimeout(domMostPopularModifiedTimeout);
+  }
+
+  updateMostPopularInProgress = true;
+
+  converter.getConversionRate(selectedCurrency, 'HRK', function(error, conversionRate) {
+    if (error) {
+      if (DEBUG) console.error('ERROR', error);
+    } else {
+      if (DEBUG) console.log('RESULT', conversionRate);
+
+      /*
+       * 'Most Popular'
+       */
+      // update the selling price
+      $('span.PSSellPrice').text(function(index) {
+        var originalText = $(this).text().trim();
+        if (DEBUG) console.log('original price:', originalText);
+
+        try {
+          var newPriceStr = convertPrice(originalText, conversionRate);
+
+          // replace the item price on page
+          return newPriceStr + ' HRK';
+        } catch (e) {
+          if (DEBUG) console.error(e);
+          return $(this).text();
+        }
+      });
+
+      // update the ticket price
+      $('span.PSRefPrice').text(function(index) {
+        var originalText = $(this).text().trim();
+        if (DEBUG) console.log('original price:', originalText);
+
+        try {
+          var newPriceStr = convertPrice(originalText, conversionRate);
+
+          // replace the item price on page
+          return newPriceStr + ' HRK';
+        } catch (e) {
+          if (DEBUG) console.error(e);
+          return $(this).text();
+        }
+      });
+    }
+
+    updateMostPopularInProgress = false;
   });
 };
 
@@ -253,5 +348,19 @@ $(document).ready(function() {
     setTimeout(function() {
       doConversions();
     }, 1000);
+  });
+
+  $('.ModPSPlacementC').bind("DOMNodeInserted", function() {
+    if (DEBUG) console.log('ModPSPlacementC DOMNodeInserted');
+
+    if (domMostPopularModifiedTimeout) {
+      clearTimeout(domMostPopularModifiedTimeout);
+    }
+    if (updateMostPopularInProgress) {
+      return;
+    }
+    domMostPopularModifiedTimeout = setTimeout(function() {
+      doMostPopularConversions();
+    }, 500);
   });
 });
