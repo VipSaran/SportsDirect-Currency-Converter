@@ -3,7 +3,7 @@
 // @description   Greasemonkey/Tampermonkey UserScript for displaying prices in currency not supported originally
 // @namespace     http://github.com/VipSaran/SportsDirect-Currency-Converter
 // @updateURL     https://github.com/VipSaran/SportsDirect-Currency-Converter/raw/master/google_play_music_album_sorter.user.js
-// @version       1.0.2
+// @version       1.0.3
 // @author        VipSaran
 // @require       http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js
 // @grant         GM_xmlhttpRequest
@@ -15,6 +15,8 @@
 // ==/UserScript==
 
 var DEBUG = false;
+
+var targetCurrency = 'HRK';
 
 function SportsDirectCurrencyConverter() {
   if (DEBUG) console.log('SportsDirectCurrencyConverter()');
@@ -121,7 +123,9 @@ var convertPrice = function(originalText, conversionRate) {
 };
 
 var doConversions = function() {
-  converter.getConversionRate(selectedCurrency, 'HRK', function(error, conversionRate) {
+  if (DEBUG) console.log('SportsDirectCurrencyConverter.doConversions()');
+
+  converter.getConversionRate(selectedCurrency, targetCurrency, function(error, conversionRate) {
     if (error) {
       if (DEBUG) console.error('ERROR', error);
     } else {
@@ -139,7 +143,7 @@ var doConversions = function() {
           var newPriceStr = convertPrice(originalText, conversionRate);
 
           // replace the item price on page
-          $(this).text(newPriceStr + ' HRK');
+          $(this).text(newPriceStr + ' ' + targetCurrency);
 
           // some original currencies (CNY, HUF) have more digits, so are displayed with small letters --> revert style to large
           $(this).removeClass('CurrencySizeSmall').addClass('CurrencySizeLarge');
@@ -158,7 +162,7 @@ var doConversions = function() {
           var newPriceStr = convertPrice(originalText, conversionRate);
 
           // replace the item price on page
-          $(this).text(newPriceStr + ' HRK');
+          $(this).text(newPriceStr + ' ' + targetCurrency);
         } catch (e) {
           if (DEBUG) console.error(e);
           return;
@@ -177,7 +181,7 @@ var doConversions = function() {
           var newPriceStr = convertPrice(originalText, conversionRate);
 
           // replace the item price on page
-          return newPriceStr + ' HRK';
+          return newPriceStr + ' ' + targetCurrency;
         } catch (e) {
           if (DEBUG) console.error(e);
           return $(this).text();
@@ -193,7 +197,7 @@ var doConversions = function() {
           var newPriceStr = convertPrice(originalText, conversionRate);
 
           // replace the item price on page
-          return newPriceStr + ' HRK';
+          return newPriceStr + ' ' + targetCurrency;
         } catch (e) {
           if (DEBUG) console.error(e);
           return $(this).text();
@@ -209,13 +213,106 @@ var doConversions = function() {
           var newPriceStr = convertPrice(originalText, conversionRate);
 
           // replace the item price on page
-          return newPriceStr + ' HRK';
+          return newPriceStr + ' ' + targetCurrency;
+        } catch (e) {
+          if (DEBUG) console.error(e);
+          return $(this).text();
+        }
+      });
+
+      /*
+       * RECENTLY VIEWED
+       */
+      // update the selling price
+      $('span.AltStratSellPrice').text(function(index) {
+        var originalText = $(this).text().trim();
+        if (DEBUG) console.log('original price:', originalText);
+
+        try {
+          var newPriceStr = convertPrice(originalText, conversionRate);
+
+          // replace the item price on page
+          return newPriceStr + ' ' + targetCurrency;
+        } catch (e) {
+          if (DEBUG) console.error(e);
+          return $(this).text();
+        }
+      });
+
+      // update the ticket price
+      $('span.AltStratRefPrice').text(function(index) {
+        var originalText = $(this).text().trim();
+        if (DEBUG) console.log('original price:', originalText);
+
+        try {
+          var newPriceStr = convertPrice(originalText, conversionRate);
+
+          // replace the item price on page
+          return newPriceStr + ' ' + targetCurrency;
         } catch (e) {
           if (DEBUG) console.error(e);
           return $(this).text();
         }
       });
     }
+  });
+};
+
+var updateMostPopularInProgress = false;
+var domMostPopularModifiedTimeout;
+
+var doMostPopularConversions = function() {
+  if (DEBUG) console.log('SportsDirectCurrencyConverter.doMostPopularConversions()');
+
+  if (domMostPopularModifiedTimeout) {
+    clearTimeout(domMostPopularModifiedTimeout);
+  }
+
+  updateMostPopularInProgress = true;
+
+  converter.getConversionRate(selectedCurrency, targetCurrency, function(error, conversionRate) {
+    if (error) {
+      if (DEBUG) console.error('ERROR', error);
+    } else {
+      if (DEBUG) console.log('RESULT', conversionRate);
+
+      /*
+       * 'Most Popular'
+       */
+      // update the selling price
+      $('span.PSSellPrice').text(function(index) {
+        var originalText = $(this).text().trim();
+        if (DEBUG) console.log('original price:', originalText);
+
+        try {
+          var newPriceStr = convertPrice(originalText, conversionRate);
+
+          // replace the item price on page
+          return newPriceStr + ' ' + targetCurrency;
+        } catch (e) {
+          if (DEBUG) console.error(e);
+          return $(this).text();
+        }
+      });
+
+      // update the ticket price
+      $('span.PSRefPrice').text(function(index) {
+        var originalText = $(this).text().trim();
+        if (DEBUG) console.log('original price:', originalText);
+
+        try {
+          var newPriceStr = convertPrice(originalText, conversionRate);
+
+          // replace the item price on page
+          return newPriceStr + ' ' + targetCurrency;
+        } catch (e) {
+          if (DEBUG) console.error(e);
+          return $(this).text();
+        }
+      });
+    }
+
+    updateMostPopularInProgress = false;
   });
 };
 
@@ -253,5 +350,19 @@ $(document).ready(function() {
     setTimeout(function() {
       doConversions();
     }, 1000);
+  });
+
+  $('.ModPSPlacementC').bind("DOMNodeInserted", function() {
+    if (DEBUG) console.log('ModPSPlacementC DOMNodeInserted');
+
+    if (domMostPopularModifiedTimeout) {
+      clearTimeout(domMostPopularModifiedTimeout);
+    }
+    if (updateMostPopularInProgress) {
+      return;
+    }
+    domMostPopularModifiedTimeout = setTimeout(function() {
+      doMostPopularConversions();
+    }, 500);
   });
 });
