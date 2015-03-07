@@ -14,7 +14,7 @@
 // @run-at        document-end
 // ==/UserScript==
 
-var DEBUG = false;
+var DEBUG = true;
 
 var targetCurrency = 'HRK';
 
@@ -346,16 +346,25 @@ $(document).ready(function() {
 
   // react to filter selections
   $('a.FilterAnchor').on('click', function() {
-    if (DEBUG) console.log('"Sort By" changed');
+    if (DEBUG) console.log('filter changed');
 
     setTimeout(function() {
       doConversions();
     }, 1000);
   });
 
-  // react to ITEM PAGE color selection changes
+  // react to ITEM PAGE 'Colour' selection changes
   $('li.colorImgli').on('click', function() {
-    if (DEBUG) console.log('"Sort By" changed');
+    if (DEBUG) console.log('"Colour" changed');
+
+    setTimeout(function() {
+      doConversions();
+    }, 500);
+  });
+
+  // react to ITEM PAGE 'Size' changes
+  $('#sizeDdl').change(function() {
+    if (DEBUG) console.log('"Size" changed');
 
     setTimeout(function() {
       doConversions();
