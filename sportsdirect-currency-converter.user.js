@@ -3,7 +3,7 @@
 // @description   Greasemonkey/Tampermonkey UserScript for displaying prices in currency not supported originally
 // @namespace     http://github.com/VipSaran/SportsDirect-Currency-Converter
 // @updateURL     https://github.com/VipSaran/SportsDirect-Currency-Converter/raw/master/google_play_music_album_sorter.user.js
-// @version       1.0.4
+// @version       1.0.5
 // @author        VipSaran
 // @require       http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js
 // @grant         GM_xmlhttpRequest
@@ -346,16 +346,25 @@ $(document).ready(function() {
 
   // react to filter selections
   $('a.FilterAnchor').on('click', function() {
-    if (DEBUG) console.log('"Sort By" changed');
+    if (DEBUG) console.log('filter changed');
 
     setTimeout(function() {
       doConversions();
     }, 1000);
   });
 
-  // react to ITEM PAGE color selection changes
+  // react to ITEM PAGE 'Colour' selection changes
   $('li.colorImgli').on('click', function() {
-    if (DEBUG) console.log('"Sort By" changed');
+    if (DEBUG) console.log('"Colour" changed');
+
+    setTimeout(function() {
+      doConversions();
+    }, 500);
+  });
+
+  // react to ITEM PAGE 'Size' changes
+  $('#sizeDdl').change(function() {
+    if (DEBUG) console.log('"Size" changed');
 
     setTimeout(function() {
       doConversions();
