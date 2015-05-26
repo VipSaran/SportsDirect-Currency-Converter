@@ -3,7 +3,7 @@
 // @description   Greasemonkey/Tampermonkey UserScript for displaying prices in currency not supported originally
 // @namespace     http://github.com/VipSaran/SportsDirect-Currency-Converter
 // @updateURL     https://github.com/VipSaran/SportsDirect-Currency-Converter/raw/master/google_play_music_album_sorter.user.js
-// @version       1.0.5
+// @version       1.0.6
 // @author        VipSaran
 // @require       http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js
 // @grant         GM_xmlhttpRequest
@@ -173,7 +173,7 @@ var doConversions = function() {
        * ITEM PAGE
        */
       // update the selling price
-      $('#lblSellingPrice').text(function(index) {
+      $("span[id$='lblSellingPrice']").text(function(index) {
         var originalText = $(this).text().trim();
         if (DEBUG) console.log('original price:', originalText);
 
@@ -189,7 +189,7 @@ var doConversions = function() {
       });
 
       // update the ticket price
-      $('#lblTicketPrice').text(function(index) {
+      $("span[id$='lblTicketPrice']").text(function(index) {
         var originalText = $(this).text().trim();
         if (DEBUG) console.log('original price:', originalText);
 
