@@ -3,7 +3,7 @@
 // @description   Greasemonkey/Tampermonkey UserScript for displaying prices in currency not supported originally
 // @namespace     http://github.com/VipSaran/SportsDirect-Currency-Converter
 // @updateURL     https://github.com/VipSaran/SportsDirect-Currency-Converter/raw/master/google_play_music_album_sorter.user.js
-// @version       1.0.6
+// @version       1.1
 // @author        VipSaran
 // @require       http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js
 // @grant         GM_xmlhttpRequest
@@ -25,16 +25,34 @@ function SportsDirectCurrencyConverter() {
 SportsDirectCurrencyConverter.prototype.getConversionRate = function(currFrom, currTo, callback) {
   if (DEBUG) console.log('SportsDirectCurrencyConverter.getConversionRate()');
 
-  var conversionName = currFrom.toUpperCase() + '_' + currTo.toUpperCase();
+  var uFrom = currFrom.toUpperCase();
+  var uTo = currTo.toUpperCase();
+
+  var conversionName = uFrom + '_' + uTo;
 
   var storedRate = window.localStorage.getItem('rate_' + conversionName);
   var storedDate = parseInt(window.localStorage.getItem('date_' + conversionName));
   if (DEBUG) console.log('storedRate=', storedRate);
   if (DEBUG) console.log('storedDate=', storedDate);
   // check if exists and saved in last day
-  if (storedRate === undefined || isNaN(storedDate) || storedDate < (new Date().getTime() - (24 * 60 * 60 * 1000))) {
+  if (storedRate === undefined || isNaN(storedRate) || isNaN(storedDate) || storedDate < (new Date().getTime() - (24 * 60 * 60 * 1000))) {
     // get the new/fresh conversion rate
-    var URL = "http://www.freecurrencyconverterapi.com/api/v3/convert?q=" + conversionName;
+    var URL = "http://api.fixer.io/latest?base=" + uFrom + "&symbols=" + uTo;
+
+    /*
+     * Example request:
+     * http://api.fixer.io/latest?base=EUR&symbols=HRK
+     *
+     * Example response:
+     * {
+     *   "base": "EUR",
+     *   "date": "2015-06-25",
+     *   "rates": {
+     *     "HRK": 7.5887
+     *    }
+     *  }
+     */
+
     if (DEBUG) console.log('URL=', URL);
     GM_xmlhttpRequest({
       method: 'GET',
@@ -46,7 +64,7 @@ SportsDirectCurrencyConverter.prototype.getConversionRate = function(currFrom, c
 
         try {
           // parse data
-          var conversionRate = data.results[conversionName].val;
+          var conversionRate = data.rates[uTo];
           if (DEBUG) console.log('conversionRate=', conversionRate);
 
           // store the result
