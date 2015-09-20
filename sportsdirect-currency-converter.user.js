@@ -14,7 +14,7 @@
 // @run-at        document-end
 // ==/UserScript==
 
-var DEBUG = false;
+var DEBUG = true;
 
 var targetCurrency = 'HRK';
 
@@ -339,7 +339,7 @@ var selectedCurrency;
 SportsDirectCurrencyConverter.prototype.init = function() {
   if (DEBUG) console.log('SportsDirectCurrencyConverter.init()');
 
-  selectedCurrency = $('#currencyLanguageSelector > span > p').text();
+  selectedCurrency = $('#currencyLanguageSelector > .spanCurrencyLanguageSelector > p').text();
   selectedCurrency = selectedCurrency.substring(selectedCurrency.indexOf(' ')).trim();
   if (DEBUG) console.log('selectedCurrency="' + selectedCurrency + '"');
 
