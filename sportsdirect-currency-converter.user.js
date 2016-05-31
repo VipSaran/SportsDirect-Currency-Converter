@@ -3,14 +3,14 @@
 // @description   Greasemonkey/Tampermonkey UserScript for displaying prices in currency not supported originally
 // @namespace     http://github.com/VipSaran/SportsDirect-Currency-Converter
 // @updateURL     https://github.com/VipSaran/SportsDirect-Currency-Converter/raw/master/google_play_music_album_sorter.user.js
-// @version       1.1.1
+// @version       1.1.2
 // @author        VipSaran
 // @require       http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js
 // @grant         GM_xmlhttpRequest
-// @include       http://www.sportsdirect.com/*
-// @include       https://www.sportsdirect.com/*
-// @match         http://www.sportsdirect.com/*
-// @match         https://www.sportsdirect.com/*
+// @include       http://*.sportsdirect.com/*
+// @include       https://*.sportsdirect.com/*
+// @match         http://*.sportsdirect.com/*
+// @match         https://*.sportsdirect.com/*
 // @run-at        document-end
 // ==/UserScript==
 
